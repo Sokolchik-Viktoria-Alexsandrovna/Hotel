@@ -1,0 +1,84 @@
+@model Hotel.Models.Reservation
+@{
+    ViewData["Title"] = "Бронирование номера";
+}
+
+<div class="container py-5" style="max-width:680px">
+    <h2 class="fw-bold mb-4"><i class="bi bi-calendar-plus me-2 text-warning"></i>Бронирование номера</h2>
+
+    @if (Model.Room != null)
+    {
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="@Model.Room.ImageUrl" class="img-fluid rounded-start h-100" style="object-fit:cover"
+                         alt="Номер" onerror="this.src='https://via.placeholder.com/200x150?text=Room'">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Номер @Model.Room.RoomNumber
+                            <span class="badge bg-warning text-dark ms-2">@Model.Room.Type</span>
+                        </h5>
+                        <p class="text-muted small">@Model.Room.Description</p>
+                        <p class="mb-0 fw-bold text-dark fs-5">@Model.Room.PricePerNight $ / ночь</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <form asp-action="Create" method="post" class="card border-0 shadow-sm p-4" id="bookingForm">
+        <input type="hidden" asp-for="RoomId" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label asp-for="CheckIn" class="form-label fw-semibold"></label>
+                <input asp-for="CheckIn" class="form-control" type="date"
+                       min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")"
+                       id="checkIn">
+                <span asp-validation-for="CheckIn" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="CheckOut" class="form-label fw-semibold"></label>
+                <input asp-for="CheckOut" class="form-control" type="date"
+                       min="@DateTime.Today.AddDays(2).ToString("yyyy-MM-dd")"
+                       id="checkOut">
+                <span asp-validation-for="CheckOut" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="alert alert-info" id="pricePreview">
+            <i class="bi bi-calculator me-1"></i>
+            <span id="priceText">Выберите даты для расчёта стоимости</span>
+        </div>
+
+        <div class="d-flex gap-2 mt-2">
+            <button type="submit" class="btn btn-warning fw-semibold flex-fill btn-lg">
+                <i class="bi bi-check-circle me-1"></i>Подтвердить бронирование
+            </button>
+            <a asp-controller="Rooms" asp-action="Details" asp-route-id="@Model.RoomId"
+               class="btn btn-outline-secondary flex-fill btn-lg">Назад</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const price = @Model.Room?.PricePerNight;
+        function updatePrice() {
+            const ci = new Date(document.getElementById('checkIn').value);
+            const co = new Date(document.getElementById('checkOut').value);
+            if (ci && co && co > ci) {
+                const nights = Math.round((co - ci) / 86400000);
+                document.getElementById('priceText').textContent =
+                    `${nights} ночей × ${price} $ = ${nights * price} $`;
+            } else {
+                document.getElementById('priceText').textContent = 'Выберите корректные даты';
+            }
+        }
+        document.getElementById('checkIn').addEventListener('change', updatePrice);
+        document.getElementById('checkOut').addEventListener('change', updatePrice);
+    </script>
+}

@@ -1,0 +1,66 @@
+@model Hotel.Models.Reservation
+@{
+    ViewData["Title"] = "Детали бронирования";
+}
+
+<div class="container py-5" style="max-width:580px">
+    <div class="card border-0 shadow">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0"><i class="bi bi-receipt me-2 text-warning"></i>Бронирование #@Model.Id</h4>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <img src="@Model.Room?.ImageUrl" class="img-fluid rounded w-100" style="max-height:220px;object-fit:cover"
+                         alt="Номер" onerror="this.src='https://via.placeholder.com/500x220?text=Room'">
+                </div>
+            </div>
+            <ul class="list-group list-group-flush mt-3">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Номер</span>
+                    <strong>№ @Model.Room?.RoomNumber (@Model.Room?.Type)</strong>
+                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Гость</span>
+                        <strong>@Model.User?.Email</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Паспорт</span>
+                        <strong>@Model.User?.PassportNumber</strong>
+                    </li>
+                }
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Дата заезда</span>
+                    <strong>@Model.CheckIn.ToString("dd MMMM yyyy")</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Дата выезда</span>
+                    <strong>@Model.CheckOut.ToString("dd MMMM yyyy")</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Количество ночей</span>
+                    <strong>@Model.Nights</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between bg-warning bg-opacity-10">
+                    <span class="fw-bold">Итоговая стоимость</span>
+                    <strong class="fs-5">@Model.TotalPrice $</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted">Дата бронирования</span>
+                    <span class="small">@Model.BookingDate.ToString("dd.MM.yyyy HH:mm")</span>
+                </li>
+            </ul>
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <a asp-action="Index" class="btn btn-outline-secondary flex-fill">← Назад</a>
+            <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" class="flex-fill"
+                  onsubmit="return confirm('Отменить бронирование?')">
+                <button type="submit" class="btn btn-danger w-100">
+                    <i class="bi bi-x-circle me-1"></i>Отменить бронирование
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

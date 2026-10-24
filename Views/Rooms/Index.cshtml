@@ -1,0 +1,101 @@
+@model IEnumerable<Hotel.Models.Room>
+@{
+    ViewData["Title"] = "Номера";
+}
+
+<div class="bg-dark text-white py-4">
+    <div class="container">
+        <h1 class="fw-bold mb-0"><i class="bi bi-door-open me-2 text-warning"></i>Наши номера</h1>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Фильтры -->
+    <form method="get" class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Тип номера</label>
+                    <select name="type" class="form-select">
+                        <option value="">Все типы</option>
+                        @foreach (var t in Enum.GetValues<Hotel.Models.RoomType>())
+                        {
+                            <option value="@t" selected="@(ViewBag.SelectedType == t.ToString())">@t</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Макс. цена ($/ночь)</label>
+                    <input type="number" name="maxPrice" class="form-control" value="@ViewBag.MaxPrice" placeholder="Любая" min="1">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Гостей (мин.)</label>
+                    <input type="number" name="capacity" class="form-control" value="@ViewBag.Capacity" placeholder="Любое" min="1">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-warning w-100 fw-semibold">
+                        <i class="bi bi-funnel me-1"></i>Применить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="mb-3">
+            <a asp-action="Create" class="btn btn-dark">
+                <i class="bi bi-plus-lg me-1"></i>Добавить номер
+            </a>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Номера по выбранным критериям не найдены.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var room in Model)
+            {
+                <div class="col-md-6 col-xl-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="position-relative">
+                            <img src="@room.ImageUrl" class="card-img-top" style="height:220px;object-fit:cover"
+                                 alt="Номер @room.RoomNumber"
+                                 onerror="this.src='https://via.placeholder.com/400x220?text=No+Image'">
+                            @if (!room.IsAvailable)
+                            {
+                                <span class="position-absolute top-0 end-0 m-2 badge bg-danger fs-6">Занят</span>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0">Номер @room.RoomNumber</h5>
+                                <span class="badge bg-warning text-dark">@room.Type</span>
+                            </div>
+                            <p class="card-text text-muted small">@(room.Description.Length > 90 ? room.Description[..90] + "…" : room.Description)</p>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="fw-bold text-dark fs-5">@room.PricePerNight $</span>
+                                <span class="text-muted small"><i class="bi bi-people me-1"></i>до @room.Capacity чел.</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-0 d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@room.Id" class="btn btn-outline-dark flex-fill">Подробнее</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@room.Id" class="btn btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@room.Id" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

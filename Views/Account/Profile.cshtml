@@ -1,0 +1,33 @@
+@model Hotel.Models.User
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="container py-5" style="max-width:540px">
+    <div class="card border-0 shadow">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0"><i class="bi bi-person-circle me-2 text-warning"></i>Мой профиль</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted"><i class="bi bi-envelope me-2"></i>Email</span>
+                    <strong>@Model.Email</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted"><i class="bi bi-card-text me-2"></i>Паспорт</span>
+                    <strong>@Model.PassportNumber</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="text-muted"><i class="bi bi-shield me-2"></i>Роль</span>
+                    <strong>@(User.IsInRole("Admin") ? "Администратор" : "Гость")</strong>
+                </li>
+            </ul>
+        </div>
+        <div class="card-footer">
+            <a asp-controller="Reservations" asp-action="Index" class="btn btn-warning w-100">
+                <i class="bi bi-calendar-check me-2"></i>Мои бронирования
+            </a>
+        </div>
+    </div>
+</div>

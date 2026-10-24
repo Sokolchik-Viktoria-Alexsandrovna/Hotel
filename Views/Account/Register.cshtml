@@ -1,0 +1,69 @@
+@model Hotel.Controllers.RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="container py-5 d-flex justify-content-center">
+    <div class="w-100" style="max-width:460px">
+        <div class="text-center mb-4">
+            <i class="bi bi-person-plus display-4 text-warning"></i>
+            <h2 class="fw-bold mt-2">Создать аккаунт</h2>
+            <p class="text-muted">Зарегистрируйтесь и бронируйте номера онлайн</p>
+        </div>
+
+        <div class="card border-0 shadow-sm p-4">
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input asp-for="Email" class="form-control" placeholder="you@example.com">
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PassportNumber" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                        <input asp-for="PassportNumber" class="form-control" placeholder="AB1234567">
+                    </div>
+                    <span asp-validation-for="PassportNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input asp-for="Password" class="form-control">
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        <input asp-for="ConfirmPassword" class="form-control">
+                    </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100 fw-semibold btn-lg">
+                    <i class="bi bi-person-check me-2"></i>Зарегистрироваться
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center mt-3 text-muted">
+            Уже есть аккаунт?
+            <a asp-action="Login" class="fw-semibold text-dark">Войти</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

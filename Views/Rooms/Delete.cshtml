@@ -1,0 +1,32 @@
+@model Hotel.Models.Room
+@{
+    ViewData["Title"] = "Удалить номер";
+}
+
+<div class="container py-5" style="max-width:540px">
+    <div class="card border-danger border-2 shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Подтверждение удаления</h4>
+        </div>
+        <div class="card-body">
+            <p class="mb-3">Вы уверены, что хотите удалить номер <strong>@Model.RoomNumber</strong>?</p>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item"><strong>Тип:</strong> @Model.Type</li>
+                <li class="list-group-item"><strong>Цена:</strong> @Model.PricePerNight $ / ночь</li>
+                <li class="list-group-item"><strong>Вместимость:</strong> @Model.Capacity чел.</li>
+            </ul>
+            <div class="alert alert-warning small">
+                <i class="bi bi-info-circle me-1"></i>Все связанные бронирования также будут удалены.
+            </div>
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <form asp-action="Delete" method="post" class="flex-fill">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger w-100 fw-semibold">
+                    <i class="bi bi-trash me-1"></i>Удалить
+                </button>
+            </form>
+            <a asp-action="Index" class="btn btn-outline-secondary flex-fill">Отмена</a>
+        </div>
+    </div>
+</div>
